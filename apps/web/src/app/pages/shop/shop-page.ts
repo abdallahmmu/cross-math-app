@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ECONOMY, type HintPack } from '../../core/config/economy';
 import { PurchaseService } from '../../core/purchase/purchase.service';
+import { SoundService } from '../../core/sound/sound.service';
 import { ProgressStore } from '../../state/progress.store';
 import { NbBadge } from '../../ui/nb-badge';
 import { NbButton } from '../../ui/nb-button';
@@ -20,6 +21,7 @@ import { ToastService } from '../../ui/toast.service';
 export class ShopPage {
   protected readonly progress = inject(ProgressStore);
   protected readonly purchases = inject(PurchaseService);
+  private readonly sound = inject(SoundService);
   private readonly toasts = inject(ToastService);
 
   protected readonly hintPacks = ECONOMY.shop.hintPacks;
@@ -27,6 +29,7 @@ export class ShopPage {
 
   protected buyHints(pack: HintPack): void {
     if (this.progress.buyHints(pack)) {
+      this.sound.play('coin');
       this.toasts.show(`+${pack.hints} hint${pack.hints > 1 ? 's' : ''}`, {
         tone: 'mint',
         icon: 'hint',

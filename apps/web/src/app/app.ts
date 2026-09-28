@@ -2,13 +2,14 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Clock } from './core/time/clock';
 import { AdOverlay } from './ui/ad-overlay';
+import { HintOffer } from './ui/hint-offer';
 import { NbToastHost } from './ui/nb-toast-host';
 import { ProgressStore } from './state/progress.store';
 
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, NbToastHost, AdOverlay],
+  imports: [RouterOutlet, NbToastHost, AdOverlay, HintOffer],
   host: { '(document:visibilitychange)': 'onVisibilityChange()' },
   template: `
     <a class="skip" href="#content">Skip to content</a>
@@ -16,6 +17,7 @@ import { ProgressStore } from './state/progress.store';
       <router-outlet />
     </main>
     <nb-toast-host />
+    <app-hint-offer />
     <app-ad-overlay />
   `,
   styles: `

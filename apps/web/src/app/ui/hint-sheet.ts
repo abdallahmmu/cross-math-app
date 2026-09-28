@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { NbButton } from '../ui/nb-button';
-import { NbIcon } from '../ui/nb-icon';
-import { NbModal } from '../ui/nb-modal';
+import { NbButton } from './nb-button';
+import { NbIcon } from './nb-icon';
+import { NbModal } from './nb-modal';
 
-/** Shown when the player asks for a hint with none left. */
+/** The buy-or-earn sheet. Opened from the top bar, or when a hint is asked for and there are none left. */
 @Component({
   selector: 'app-hint-sheet',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -11,8 +11,8 @@ import { NbModal } from '../ui/nb-modal';
   template: `
     <nb-modal label="Out of hints" (dismiss)="dismiss.emit()">
       <div class="stack">
-        <h3>Out of hints</h3>
-        <p class="muted">Pick one up, or earn one.</p>
+        <h3>{{ title() }}</h3>
+        <p class="muted">Buy one with coins, or watch a video for a free one.</p>
 
         <button
           nbButton
@@ -39,7 +39,7 @@ import { NbModal } from '../ui/nb-modal';
         </button>
 
         <button nbButton variant="ghost" block (click)="shop.emit()">Open the shop</button>
-        <button nbButton variant="ghost" block (click)="dismiss.emit()">Keep trying</button>
+        <button nbButton variant="ghost" block (click)="dismiss.emit()">{{ dismissLabel() }}</button>
       </div>
     </nb-modal>
   `,
@@ -61,6 +61,8 @@ import { NbModal } from '../ui/nb-modal';
   `,
 })
 export class HintSheet {
+  readonly title = input('Out of hints');
+  readonly dismissLabel = input('Keep trying');
   readonly coins = input.required<number>();
   readonly hintPrice = input.required<number>();
   readonly freeLeft = input.required<number>();

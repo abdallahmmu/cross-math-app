@@ -211,7 +211,7 @@ mobile:
 | Interface | Today | Later |
 | --- | --- | --- |
 | `SaveAdapter` | `LocalSaveAdapter` | `ApiSaveAdapter` |
-| `AdsService` | `FakeAdsService` - a two-second overlay marked a placeholder | Capacitor AdMob |
+| `AdsService` | `FakeAdsService` - a two-second overlay marked a placeholder | Capacitor AdMob, or a portal SDK on web ([ADS.md](ADS.md)) |
 | `PurchaseService` | `UnavailablePurchaseService` - products listed, all disabled | Capacitor IAP |
 | `AnalyticsService` | `ConsoleAnalyticsService` | a real sink |
 
@@ -282,6 +282,33 @@ value has it as a prefix, otherwise it waits 900ms for a second digit. With tile
 `26` on the board, typing `2` waits and `26` commits immediately. Typing a value with no
 matching tile is ignored with a toast - it is a typo, not a mistake, and never costs a
 life.
+
+### Sound
+
+Synthesised with the Web Audio API - a handful of oscillators and gain envelopes in
+`core/sound/sound.service.ts`. No audio files, so the bundle is unchanged, there is nothing
+to download, and a sound is tuned by editing numbers.
+
+The whole kit sits on a C major pentatonic, which matters more than it sounds: a placement
+that also completes an equation fires two sounds at once, and on that scale they cannot
+clash.
+
+Browsers refuse to start audio outside a user gesture, so the `AudioContext` is created
+lazily on the first sound - which is always a tap, a click or a keypress. If Web Audio is
+unavailable the service marks itself dead and the game is simply silent.
+
+Placement sounds are played from `GameStore.put()` and `commit()`, not from the components,
+so dragging, tapping, typing and hints all sound the same without four call sites. One
+sound per placement: the biggest thing that just happened wins - win over solved-equation
+over placed.
+
+### Hints
+
+The offer sheet lives in the shell, not the Play page, because the hint counter in the top
+bar opens it from anywhere. `HintOffer` carries an optional follow-up: during play that is
+"use it as soon as it arrives", and from the top bar there is none, because the hint just
+goes in the pocket. `suspend()` exists for the rewarded-video path, which has to hide the
+sheet while the advert takes the screen without forgetting what to do afterwards.
 
 ### Motion
 

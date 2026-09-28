@@ -1,5 +1,6 @@
-import { computed } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import { SoundService } from '../core/sound/sound.service';
 import {
   buildGrid,
   isCorrectPlacement,
@@ -198,6 +199,8 @@ export const GameStore = signalStore(
   })),
 
   withMethods((store) => {
+    const sound = inject(SoundService);
+
     /** The next blank that still needs a value, in reading order, after `from`. */
     const nextEmptyBlank = (from: CellKey | null): CellKey | null => {
       const puzzle = store.puzzle();
@@ -242,9 +245,12 @@ export const GameStore = signalStore(
       const nextSelection = nextEmptyBlank(cellKey);
       patchState(store, { selected: nextSelection });
 
-      if (puzzle !== null && nextSelection === null && validateSolution(puzzle, answers).valid) {
-        patchState(store, { status: 'won' });
-      }
+      const won =
+        puzzle !== null && nextSelection === null && validateSolution(puzzle, answers).valid;
+      if (won) patchState(store, { status: 'won' });
+
+      // One sound per placement: the biggest thing that just happened.
+      sound.play(won ? 'win' : finished.length > 0 ? 'solve' : 'place');
     };
 
     const freeTile = (value: number): TrayTile | undefined =>
@@ -258,6 +264,7 @@ export const GameStore = signalStore(
       if (!isCorrectPlacement(puzzle, cellKey, tile.value)) {
         patchState(store, { mistakes: store.mistakes() + 1, selected: cellKey });
         flash({ wrong: { cellKey, value: tile.value } }, { wrong: null }, WRONG_MS);
+        sound.play('wrong');
         return 'wrong';
       }
 
@@ -289,6 +296,7 @@ export const GameStore = signalStore(
       select(cellKey: CellKey): void {
         const puzzle = store.puzzle();
         if (puzzle === null || !puzzle.blanks.includes(cellKey)) return;
+        if (store.selected() !== cellKey) sound.play('select');
         patchState(store, { selected: cellKey });
       },
 

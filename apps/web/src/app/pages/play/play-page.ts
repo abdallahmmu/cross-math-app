@@ -18,14 +18,14 @@ import {
   type Difficulty,
   type PuzzleRequest,
 } from '@sumday/engine';
-import { AdsService } from '../../core/ads/ads.service';
 import { AnalyticsService } from '../../core/analytics/analytics.service';
+import { HintOffer, type HintSource } from '../../core/hints/hint-offer.service';
+import { SoundService } from '../../core/sound/sound.service';
 import { ECONOMY, starsFor } from '../../core/config/economy';
 import { Clock } from '../../core/time/clock';
 import { formatDuration } from '../../core/time/local-date';
 import { Board } from '../../game/board';
 import { DragGhost } from '../../game/drag-ghost';
-import { HintSheet } from '../../game/hint-sheet';
 import { TileDragService } from '../../game/tile-drag.service';
 import { Tray } from '../../game/tray';
 import { WinModal } from '../../game/win-modal';
@@ -40,7 +40,6 @@ import { ToastService } from '../../ui/toast.service';
 
 type PlayMode = 'journey' | 'daily';
 
-const HINT_PACK = ECONOMY.shop.hintPacks[0];
 /** How long to wait for a second digit before committing what was typed. */
 const TYPE_AHEAD_MS = 900;
 
@@ -48,7 +47,7 @@ const TYPE_AHEAD_MS = 900;
   selector: 'app-play-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [GameStore],
-  imports: [Board, DragGhost, HintSheet, NbBadge, NbButton, NbIcon, NbTopBar, Tray, WinModal],
+  imports: [Board, DragGhost, NbBadge, NbButton, NbIcon, NbTopBar, Tray, WinModal],
   host: { '(document:keydown)': 'onKeydown($event)' },
   templateUrl: './play-page.html',
   styleUrl: './play-page.css',
@@ -61,16 +60,15 @@ export class PlayPage {
 
   protected readonly game = inject(GameStore);
   protected readonly progress = inject(ProgressStore);
-  private readonly ads = inject(AdsService);
   private readonly analytics = inject(AnalyticsService);
   private readonly clock = inject(Clock);
   private readonly drag = inject(TileDragService);
+  private readonly hintOffer = inject(HintOffer);
+  private readonly sound = inject(SoundService);
   private readonly router = inject(Router);
   private readonly toasts = inject(ToastService);
 
   protected readonly summary = signal<WinSummary | null>(null);
-  protected readonly hintSheetOpen = signal(false);
-  protected readonly hintPrice = HINT_PACK.coins;
 
   private readonly typed = signal('');
   private typeTimer: ReturnType<typeof setTimeout> | undefined;
@@ -143,8 +141,8 @@ export class PlayPage {
 
     this.awarded = false;
     this.drag.cancel();
+    this.hintOffer.close();
     this.summary.set(null);
-    this.hintSheetOpen.set(false);
     this.typed.set('');
     this.startedAt = this.clock.now();
     this.game.load(generatePuzzle(request));
@@ -215,7 +213,9 @@ export class PlayPage {
   }
 
   private announceReward(coins: number): void {
-    if (coins > 0) this.toasts.show(`+${coins} coins`, { tone: 'mint', icon: 'coin' });
+    if (coins <= 0) return;
+    this.toasts.show(`+${coins} coins`, { tone: 'mint', icon: 'coin' });
+    setTimeout(() => this.sound.play('coin'), 420);
   }
 
   /* Input ----------------------------------------------------------------- */
@@ -275,13 +275,14 @@ export class PlayPage {
   protected useHint(): void {
     if (this.game.status() !== 'playing') return;
     if (this.progress.hints() <= 0) {
-      this.hintSheetOpen.set(true);
+      // Out of hints: offer one, and spend it as soon as it arrives.
+      this.hintOffer.open((source) => this.spendHint(source));
       return;
     }
     this.spendHint('owned');
   }
 
-  private spendHint(source: 'owned' | 'purchased' | 'rewarded'): void {
+  private spendHint(source: HintSource | 'owned'): void {
     const puzzle = this.game.puzzle();
     if (puzzle === null) return;
 
@@ -289,32 +290,11 @@ export class PlayPage {
     if (hint === null) return;
     if (this.progress.useHint() !== 'spent') return;
 
+    this.sound.play('hint');
     this.game.applyHint(hint.cellKey, hint.value);
     this.analytics.track({ name: 'hint_used', id: this.runId(), source });
   }
 
-  protected buyHintFromSheet(): void {
-    if (!this.progress.buyHints(HINT_PACK)) {
-      this.toasts.show('Not enough coins', { tone: 'error' });
-      return;
-    }
-    this.hintSheetOpen.set(false);
-    this.spendHint('purchased');
-  }
-
-  protected async watchForHint(): Promise<void> {
-    this.hintSheetOpen.set(false);
-    const watched = await this.ads.showRewarded();
-    if (!watched || !this.progress.grantRewardedHint()) {
-      this.toasts.show('No free hints left today', { tone: 'error' });
-      return;
-    }
-    this.spendHint('rewarded');
-  }
-
-  protected goToShop(): void {
-    void this.router.navigate(['/shop']);
-  }
 
   /* Win modal ------------------------------------------------------------- */
 

@@ -1,4 +1,5 @@
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -14,7 +15,10 @@ import { NbIcon, type IconName } from './nb-icon';
   selector: 'nb-counter',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NbIcon],
-  host: { '[attr.aria-label]': 'ariaLabel()' },
+  host: {
+    '[attr.aria-label]': 'decorative() ? null : ariaLabel()',
+    '[attr.aria-hidden]': 'decorative() ? true : null',
+  },
   template: `
     <nb-icon [name]="icon()" />
     <span class="num" aria-hidden="true">{{ value() }}</span>
@@ -46,6 +50,8 @@ export class NbCounter {
   readonly icon = input.required<IconName>();
   readonly value = input.required<number>();
   readonly label = input.required<string>();
+  /** Set when a wrapping button provides the accessible name instead. */
+  readonly decorative = input(false, { transform: booleanAttribute });
 
   protected readonly ariaLabel = computed(() => `${this.value()} ${this.label()}`);
 

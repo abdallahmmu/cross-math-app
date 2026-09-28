@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { SaveAdapter } from '../../core/save/save-adapter';
+import { SoundService } from '../../core/sound/sound.service';
 import { ProgressStore } from '../../state/progress.store';
 import { NbBadge } from '../../ui/nb-badge';
 import { NbButton } from '../../ui/nb-button';
@@ -18,6 +19,7 @@ import { ToastService } from '../../ui/toast.service';
 export class SettingsPage {
   protected readonly progress = inject(ProgressStore);
   private readonly saves = inject(SaveAdapter);
+  private readonly sound = inject(SoundService);
   private readonly toasts = inject(ToastService);
 
   protected readonly confirmingReset = signal(false);
@@ -25,6 +27,8 @@ export class SettingsPage {
 
   protected toggleSound(): void {
     this.progress.setSound(!this.progress.sound());
+    // Play it after turning it on, so the switch confirms itself.
+    this.sound.play('toggle');
   }
 
   protected resetProgress(): void {

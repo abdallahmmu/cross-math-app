@@ -44,15 +44,3 @@
     (leave)="leave()"
   />
 }
-
-@if (hintSheetOpen()) {
-  <app-hint-sheet
-    [coins]="progress.coins()"
-    [hintPrice]="hintPrice"
-    [freeLeft]="progress.freeHintsLeftToday()"
-    (buy)="buyHintFromSheet()"
-    (watch)="watchForHint()"
-    (shop)="goToShop()"
-    (dismiss)="hintSheetOpen.set(false)"
-  />
-}

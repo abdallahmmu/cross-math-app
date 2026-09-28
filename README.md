@@ -80,7 +80,7 @@ npm start     # http://localhost:4200
   `Backspace` clears what you typed, `Enter` commits it early.
 - **Daily** - one puzzle a day, a seven-day strip and the streak.
 - **Shop** - hint packs and the real-money section that arrives with the mobile build.
-- **Settings** - sound placeholder and a reset with a confirmation.
+- **Settings** - sound on/off and a reset with a confirmation.
 - **/styleguide** - development only: every component and state, plus contrast ratios
   measured from the live tokens.
 
@@ -111,4 +111,5 @@ const grid = buildGrid(puzzle);                  // rows × cols of render-ready
 ```
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the model, the generation pipeline and
-the public API.
+the public API, [docs/ONLINE.md](docs/ONLINE.md) for the plan to go online, and
+[docs/ADS.md](docs/ADS.md) for how the ad money would actually work.
