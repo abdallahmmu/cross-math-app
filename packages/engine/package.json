@@ -1,0 +1,26 @@
+{
+  "name": "@sumday/engine",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Deterministic puzzle engine for Sumday. Runs in the browser and in Node, with zero runtime dependencies.",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json",
+    "verify:node": "npm run build && node scripts/verify-node.mjs"
+  }
+}
