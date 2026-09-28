@@ -28,6 +28,10 @@ import { booleanAttribute, ChangeDetectionStrategy, Component, input } from '@an
       box-shadow: var(--shadow);
       font-size: var(--text-lg);
       line-height: 1;
+      /* A drag must not scroll the page or select the digits underneath. */
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
       transition:
         transform var(--dur-fast) var(--ease-out),
         box-shadow var(--dur-fast) var(--ease-out);
@@ -37,6 +41,12 @@ import { booleanAttribute, ChangeDetectionStrategy, Component, input } from '@an
       transform: translate(var(--press-offset), var(--press-offset));
       box-shadow: 0 0 0 var(--ink);
     }
+    :host(.is-dragging) {
+      opacity: 0.35;
+      transform: translate(2px, 2px);
+      box-shadow: 0 0 0 var(--ink);
+    }
+
     :host(.is-wrong) {
       background: var(--error);
       color: var(--on-accent);

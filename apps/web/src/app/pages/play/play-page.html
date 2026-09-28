@@ -31,8 +31,10 @@
     </button>
   </div>
 
-  <p class="muted keys">Tap a cell, then a tile - or just type a number.</p>
+  <p class="muted keys">Drag a tile onto a cell - or tap it, or type the number.</p>
 </section>
+
+<app-drag-ghost />
 
 @if (summary(); as won) {
   <app-win-modal

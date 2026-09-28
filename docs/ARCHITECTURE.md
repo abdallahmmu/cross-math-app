@@ -257,14 +257,33 @@ every cell places itself with `grid-row` / `grid-column`.
 
 ### Input
 
-Tap a cell, then a tile. Selection starts on the first empty blank and moves to the next one
-in reading order after every correct placement.
+Three ways to place a tile, all landing in the same `put()` in `GameStore`, so the pop, the
+shake, the mistake count and the win check cannot drift apart.
 
-Typing works too, and handles multi-digit values: a digit is committed as soon as no
-remaining tile value has it as a prefix, otherwise it waits 900ms for a second digit. With
-tiles `2` and `26` on the board, typing `2` waits and `26` commits immediately. Typing a
-value with no matching tile is ignored with a toast - it is a typo, not a mistake, and never
-costs a life.
+**Drag** is the primary one, and it is built on Pointer Events rather than HTML5
+drag-and-drop, which does not fire on touch at all. One code path covers mouse, touch and
+pen:
+
+- A press only becomes a drag after 6px of travel, so a press that does not move stays a
+  tap. The click that follows a real drag is swallowed; a click with `detail === 0` is a
+  keyboard activation and always places.
+- The pointer is captured, so the drag survives leaving the tile.
+- Hit testing is `elementFromPoint` against `[data-cell]`, which is only present on *empty*
+  blanks. The floating tile is `pointer-events: none`, or it would always be the element
+  under the pointer. Dropping over anything else simply returns the tile - no mistake.
+- On touch the tile is carried 44px above the finger and the drop is tested there, so you
+  aim with the tile you can see. With a mouse the cursor is the aim point and the tile is
+  drawn just above it, so it never covers the cell being targeted.
+- Tiles are `touch-action: none`, which is what stops a drag from scrolling the page.
+
+**Tap** a cell, then a tile. Selection starts on the first empty blank and moves to the next
+one in reading order after every correct placement.
+
+**Typing** handles multi-digit values: a digit is committed as soon as no remaining tile
+value has it as a prefix, otherwise it waits 900ms for a second digit. With tiles `2` and
+`26` on the board, typing `2` waits and `26` commits immediately. Typing a value with no
+matching tile is ignored with a toast - it is a typo, not a mistake, and never costs a
+life.
 
 ### Accessibility
 

@@ -140,7 +140,9 @@
       <button appTile [value]="7"></button>
       <button appTile [value]="42"></button>
       <button appTile [value]="99" wrong></button>
+      <button appTile class="is-dragging" [value]="8"></button>
     </div>
+    <p class="muted">Default, two digit, wrong, and being dragged.</p>
   </section>
 
   <section class="stack">
@@ -152,6 +154,7 @@
       <button nbButton variant="secondary" size="sm" (click)="placeWrong()">Place wrong</button>
       <button nbButton variant="ghost" size="sm" (click)="resetBoard()">Reset</button>
     </div>
+    <p class="muted">Drag a tile onto a dashed cell, or tap a cell and then a tile.</p>
     <p class="muted">
       Status: {{ game.status() }} · mistakes {{ game.mistakes() }} · solved
       {{ game.solvedCount() }}/{{ game.equationCount() }}
@@ -188,6 +191,8 @@
     <p class="muted">Both are disabled under prefers-reduced-motion.</p>
   </section>
 </section>
+
+<app-drag-ghost />
 
 @if (showModal()) {
   <nb-modal label="Example modal" variant="modal" (dismiss)="showModal.set(false)">

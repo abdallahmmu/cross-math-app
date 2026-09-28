@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import type { CellKey } from '@sumday/engine';
 import { GameStore } from '../state/game.store';
+import { TileDragService } from './tile-drag.service';
 
 /**
  * The board is a single CSS grid. Number cells sit on even rows and columns and
@@ -38,6 +39,8 @@ import { GameStore } from '../state/game.store';
             [class.is-solved]="cell.solved && !cell.selected"
             [class.is-wrong]="cell.wrong"
             [class.is-popped]="cell.popped"
+            [class.is-drop-target]="drag.dropTarget() === cell.key"
+            [attr.data-cell]="cell.filled ? null : cell.key"
             [style.grid-row]="cell.row + 1"
             [style.grid-column]="cell.col + 1"
             [attr.aria-label]="cell.label"
@@ -76,6 +79,7 @@ import { GameStore } from '../state/game.store';
 })
 export class Board {
   protected readonly store = inject(GameStore);
+  protected readonly drag = inject(TileDragService);
 
   protected readonly numberCols = computed(() => Math.ceil(this.store.cols() / 2));
   protected readonly symbolCols = computed(() => Math.floor(this.store.cols() / 2));

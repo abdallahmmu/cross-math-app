@@ -24,7 +24,9 @@ import { ECONOMY, starsFor } from '../../core/config/economy';
 import { Clock } from '../../core/time/clock';
 import { formatDuration } from '../../core/time/local-date';
 import { Board } from '../../game/board';
+import { DragGhost } from '../../game/drag-ghost';
 import { HintSheet } from '../../game/hint-sheet';
+import { TileDragService } from '../../game/tile-drag.service';
 import { Tray } from '../../game/tray';
 import { WinModal } from '../../game/win-modal';
 import type { WinSummary } from '../../game/win-summary';
@@ -46,7 +48,7 @@ const TYPE_AHEAD_MS = 900;
   selector: 'app-play-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [GameStore],
-  imports: [Board, HintSheet, NbBadge, NbButton, NbIcon, NbTopBar, Tray, WinModal],
+  imports: [Board, DragGhost, HintSheet, NbBadge, NbButton, NbIcon, NbTopBar, Tray, WinModal],
   host: { '(document:keydown)': 'onKeydown($event)' },
   templateUrl: './play-page.html',
   styleUrl: './play-page.css',
@@ -62,6 +64,7 @@ export class PlayPage {
   private readonly ads = inject(AdsService);
   private readonly analytics = inject(AnalyticsService);
   private readonly clock = inject(Clock);
+  private readonly drag = inject(TileDragService);
   private readonly router = inject(Router);
   private readonly toasts = inject(ToastService);
 
@@ -139,6 +142,7 @@ export class PlayPage {
     }
 
     this.awarded = false;
+    this.drag.cancel();
     this.summary.set(null);
     this.hintSheetOpen.set(false);
     this.typed.set('');

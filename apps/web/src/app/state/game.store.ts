@@ -247,25 +247,32 @@ export const GameStore = signalStore(
       }
     };
 
-    /** Place the first free tile with this value into the selected cell. */
-    const placeValue = (value: number): PlaceOutcome => {
+    const freeTile = (value: number): TrayTile | undefined =>
+      store.tiles().find((item) => item.placedAt === null && item.value === value);
+
+    /** The one place a tile ever lands, however it was moved there. */
+    const put = (tile: TrayTile, cellKey: CellKey): PlaceOutcome => {
       const puzzle = store.puzzle();
       if (puzzle === null || store.status() !== 'playing') return 'no-cell';
 
-      const tile = store.tiles().find((item) => item.placedAt === null && item.value === value);
+      if (!isCorrectPlacement(puzzle, cellKey, tile.value)) {
+        patchState(store, { mistakes: store.mistakes() + 1, selected: cellKey });
+        flash({ wrong: { cellKey, value: tile.value } }, { wrong: null }, WRONG_MS);
+        return 'wrong';
+      }
+
+      commit(cellKey, tile.value, tile.id);
+      return 'correct';
+    };
+
+    /** Place the first free tile with this value into the selected cell. */
+    const placeValue = (value: number): PlaceOutcome => {
+      const tile = freeTile(value);
       if (tile === undefined) return 'no-tile';
 
       const cellKey = store.selected() ?? nextEmptyBlank(null);
       if (cellKey === null) return 'no-cell';
-
-      if (!isCorrectPlacement(puzzle, cellKey, value)) {
-        patchState(store, { mistakes: store.mistakes() + 1, selected: cellKey });
-        flash({ wrong: { cellKey, value } }, { wrong: null }, WRONG_MS);
-        return 'wrong';
-      }
-
-      commit(cellKey, value, tile.id);
-      return 'correct';
+      return put(tile, cellKey);
     };
 
     return {
@@ -290,12 +297,22 @@ export const GameStore = signalStore(
       placeTile(tileId: number): PlaceOutcome {
         const tile = store.tiles().find((item) => item.id === tileId);
         if (tile === undefined || tile.placedAt !== null) return 'no-tile';
-        return placeValue(tile.value);
+
+        const cellKey = store.selected() ?? nextEmptyBlank(null);
+        if (cellKey === null) return 'no-cell';
+        return put(tile, cellKey);
+      },
+
+      /** Drop a tile straight onto a cell, bypassing the selection. */
+      placeTileAt(tileId: number, cellKey: CellKey): PlaceOutcome {
+        const tile = store.tiles().find((item) => item.id === tileId);
+        if (tile === undefined || tile.placedAt !== null) return 'no-tile';
+        return put(tile, cellKey);
       },
 
       /** Reveal one cell. Costs a hint, never a mistake. */
       applyHint(cellKey: CellKey, value: number): boolean {
-        const tile = store.tiles().find((item) => item.placedAt === null && item.value === value);
+        const tile = freeTile(value);
         if (tile === undefined) return false;
         patchState(store, { hintsUsed: store.hintsUsed() + 1 });
         commit(cellKey, value, tile.id);

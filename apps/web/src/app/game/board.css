@@ -86,6 +86,17 @@
   color: var(--ink);
 }
 
+.is-blank.is-drop-target {
+  border-style: solid;
+  border-width: 4px;
+  border-color: var(--ink);
+  background: var(--sky);
+  color: var(--on-accent);
+  outline: 3px solid var(--sky);
+  outline-offset: 3px;
+  transform: scale(1.06);
+}
+
 .is-blank.is-wrong {
   border-style: solid;
   border-color: var(--ink);

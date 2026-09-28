@@ -76,8 +76,8 @@ npm start     # http://localhost:4200
 
 - **Home** - today's daily, the next journey level, coins and hints.
 - **Levels** - 100 levels in four tiers, stars per level, each one unlocked by the last.
-- **Play** - tap a cell then a tile, or just type the number. `Backspace` clears what you
-  typed, `Enter` commits it early.
+- **Play** - drag a tile onto a cell, tap a cell and then a tile, or type the number.
+  `Backspace` clears what you typed, `Enter` commits it early.
 - **Daily** - one puzzle a day, a seven-day strip and the streak.
 - **Shop** - hint packs, four themes, and the real-money section that arrives with the
   mobile build.

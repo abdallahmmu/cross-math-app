@@ -12,6 +12,7 @@ import { generatePuzzle } from '@sumday/engine';
 import { THEMES, type ThemeId } from '../../core/config/themes';
 import { ThemeService } from '../../core/theme/theme.service';
 import { Board } from '../../game/board';
+import { DragGhost } from '../../game/drag-ghost';
 import { HintSheet } from '../../game/hint-sheet';
 import { Tile } from '../../game/tile';
 import { Tray } from '../../game/tray';
@@ -70,6 +71,7 @@ const WIN_SUMMARY: WinSummary = {
   providers: [GameStore],
   imports: [
     Board,
+    DragGhost,
     HintSheet,
     NbBadge,
     NbButton,
