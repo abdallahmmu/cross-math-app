@@ -1,0 +1,103 @@
+:host {
+  display: block;
+}
+
+.board {
+  /* The widest the board may be, and how the space is shared out. Symbol tracks
+     are narrower than number tracks, which is what buys the room a 13-wide
+     expert grid needs on a small phone. */
+  --gap: 2px;
+  --available: min(100vw - 2 * var(--space-3), var(--content-max));
+  --track-weight: calc(var(--number-cols) + 0.56 * var(--symbol-cols));
+  --cell: min(
+    3.25rem,
+    calc((var(--available) - (var(--cols) - 1) * var(--gap)) / var(--track-weight))
+  );
+  --symbol: calc(var(--cell) * 0.56);
+
+  display: grid;
+  gap: var(--gap);
+  justify-content: center;
+  margin-inline: auto;
+  width: max-content;
+  max-width: 100%;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-tile);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  font-size: calc(var(--cell) * 0.44);
+  line-height: 1;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.is-given {
+  border: var(--border);
+  background: var(--cell-given-bg);
+  color: var(--ink);
+}
+
+.is-symbol {
+  color: var(--ink);
+  font-size: calc(var(--cell) * 0.5);
+}
+
+.is-blank {
+  border: var(--border-width) dashed var(--cell-blank-border);
+  background: var(--cell-blank-bg);
+  color: var(--ink);
+  padding: 0;
+  /* The cell is the touch target; on the smallest grids it is below 44px, so
+     the tray tiles carry the large targets and this stays tappable but tight. */
+  min-width: 0;
+  min-height: 0;
+}
+
+.is-blank.is-filled {
+  border-style: solid;
+  border-color: var(--ink);
+  background: var(--surface);
+}
+
+.is-blank.is-selected {
+  border-style: solid;
+  border-width: 4px;
+  border-color: var(--ink);
+  background: var(--cell-selected-bg);
+  color: var(--on-accent);
+}
+
+.cell.is-solved {
+  background: var(--cell-solved-bg);
+  border-color: var(--ink);
+  color: var(--on-accent);
+}
+
+.is-symbol.is-solved {
+  background: none;
+  color: var(--ink);
+}
+
+.is-blank.is-wrong {
+  border-style: solid;
+  border-color: var(--ink);
+  background: var(--cell-wrong-bg);
+  color: var(--on-accent);
+  animation: nb-shake var(--dur-slow) var(--ease-out);
+}
+
+.is-popped {
+  animation: nb-pop var(--dur-slow) var(--ease-spring);
+}
+
+.is-symbol.is-popped {
+  animation: nb-pop-soft var(--dur-slow) var(--ease-spring);
+}

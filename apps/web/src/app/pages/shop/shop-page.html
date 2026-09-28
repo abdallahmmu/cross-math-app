@@ -1,0 +1,84 @@
+<nb-top-bar title="Shop" backTo="/" />
+
+<section class="page shop">
+  <section class="stack">
+    <span class="section-title">Hints</span>
+    @for (pack of hintPacks; track pack.id) {
+      <nb-card class="offer">
+        <div class="offer-text">
+          <p class="offer-title">
+            <nb-icon name="hint" />
+            {{ pack.hints }} {{ pack.hints === 1 ? 'hint' : 'hints' }}
+          </p>
+          <p class="muted">Reveals one cell, no mistake counted.</p>
+        </div>
+        <button
+          nbButton
+          variant="primary"
+          [disabled]="progress.coins() < pack.coins"
+          (click)="buyHints(pack)"
+          [attr.aria-label]="
+            'Buy ' + pack.hints + (pack.hints === 1 ? ' hint' : ' hints') + ' for ' + pack.coins + ' coins'
+          "
+        >
+          <nb-icon name="coin" />
+          <span class="num">{{ pack.coins }}</span>
+        </button>
+      </nb-card>
+    }
+  </section>
+
+  <section class="stack">
+    <span class="section-title">Themes</span>
+    @for (row of themeRows(); track row.theme.id) {
+      <nb-card class="offer">
+        <div class="offer-text">
+          <p class="offer-title">{{ row.theme.name }}</p>
+          <p class="muted">{{ row.theme.blurb }}</p>
+          <div class="swatches" aria-hidden="true">
+            @for (colour of row.theme.swatches; track colour) {
+              <span [style.background]="colour"></span>
+            }
+          </div>
+        </div>
+        <button
+          nbButton
+          [variant]="row.active ? 'ghost' : 'primary'"
+          [disabled]="row.active || (!row.owned && !row.affordable)"
+          (click)="chooseTheme(row)"
+          [attr.aria-label]="
+            row.active
+              ? row.theme.name + ' is active'
+              : row.owned
+                ? 'Use ' + row.theme.name
+                : 'Buy ' + row.theme.name + ' for ' + row.theme.coins + ' coins'
+          "
+        >
+          @if (!row.owned) {
+            <nb-icon name="coin" />
+          }
+          <span class="num">{{ themeButtonLabel(row) }}</span>
+        </button>
+      </nb-card>
+    }
+  </section>
+
+  <section class="stack">
+    <div class="row-between">
+      <span class="section-title">Real money</span>
+      <nb-badge tone="surface">{{ purchases.unavailableReason }}</nb-badge>
+    </div>
+    @for (product of purchases.products; track product.id) {
+      <nb-card class="offer is-disabled">
+        <div class="offer-text">
+          <p class="offer-title">{{ product.title }}</p>
+          <p class="muted">{{ product.detail }}</p>
+        </div>
+        <button nbButton variant="secondary" disabled>{{ product.price }}</button>
+      </nb-card>
+    }
+    <p class="muted">
+      In-app purchases arrive with the mobile build. Nothing here can be bought on the web.
+    </p>
+  </section>
+</section>

@@ -1,0 +1,58 @@
+.tier {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.tier-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(4.25rem, 1fr));
+  gap: var(--space-2);
+}
+
+.level {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  aspect-ratio: 1;
+  min-height: var(--tap-min);
+  border: var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-display);
+  font-weight: 800;
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.level .num {
+  font-size: var(--text-lg);
+}
+
+.level.is-cleared {
+  background: var(--mint);
+  color: var(--on-accent);
+}
+
+.level.is-locked {
+  background: var(--paper);
+  border-style: dashed;
+  border-color: var(--cell-blank-border);
+  color: var(--ink-soft);
+  box-shadow: none;
+  --icon-size: 1.1rem;
+}
+
+a.level:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+nb-stars.mini {
+  --icon-size: 0.6rem;
+}

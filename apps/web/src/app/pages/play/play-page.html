@@ -1,0 +1,56 @@
+<nb-top-bar [title]="heading()" [backTo]="backTo()" />
+
+<section class="page play">
+  <div class="hud">
+    @if (difficulty() !== null) {
+      <nb-badge tone="sky">{{ difficulty() }}</nb-badge>
+    }
+    <span class="hud-fact">
+      <span class="hud-label">Time</span>
+      <span class="num">{{ elapsed() }}</span>
+    </span>
+    <span class="hud-fact">
+      <span class="hud-label">Mistakes</span>
+      <span class="num" [class.has-mistakes]="game.mistakes() > 0">{{ game.mistakes() }}</span>
+    </span>
+    <span class="hud-fact">
+      <span class="hud-label">Solved</span>
+      <span class="num">{{ game.solvedCount() }}/{{ game.equationCount() }}</span>
+    </span>
+  </div>
+
+  <app-board />
+
+  <app-tray />
+
+  <div class="actions">
+    <button nbButton variant="secondary" (click)="useHint()">
+      <nb-icon name="hint" />
+      Hint
+      <span class="num">{{ progress.hints() }}</span>
+    </button>
+  </div>
+
+  <p class="muted keys">Tap a cell, then a tile - or just type a number.</p>
+</section>
+
+@if (summary(); as won) {
+  <app-win-modal
+    [summary]="won"
+    (next)="goToNextLevel()"
+    (replay)="replay()"
+    (leave)="leave()"
+  />
+}
+
+@if (hintSheetOpen()) {
+  <app-hint-sheet
+    [coins]="progress.coins()"
+    [hintPrice]="hintPrice"
+    [freeLeft]="progress.freeHintsLeftToday()"
+    (buy)="buyHintFromSheet()"
+    (watch)="watchForHint()"
+    (shop)="goToShop()"
+    (dismiss)="hintSheetOpen.set(false)"
+  />
+}

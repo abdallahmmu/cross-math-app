@@ -1,0 +1,133 @@
+/*
+ * Design tokens for Sumday. Neubrutalism, warm and playful: flat colour, thick
+ * ink borders, hard offset shadows, no blur, no gradients.
+ *
+ * A theme only ever redefines the variables in this file. Nothing else in the
+ * app needs to know a theme exists.
+ *
+ * Contrast rule
+ * -------------
+ * `--ink` is the border, shadow and body-text colour. `--on-accent` is the text
+ * colour used on top of a filled accent (primary, sunflower, mint, sky, lilac).
+ * The two are the same in light themes and swap in the dark one, which is what
+ * lets every accent stay bright without any text/background pair failing AA.
+ * Measured ratios are listed on /styleguide.
+ */
+
+:root {
+  /* Classic (free) */
+  --paper: #fff4e0;
+  --surface: #ffffff;
+  --ink: #1a1a1a;
+  --on-accent: #1a1a1a;
+  --ink-soft: #5c5750;
+  --primary: #ff6b4a;
+  --sunflower: #ffc93c;
+  --mint: #7ed6a5;
+  --sky: #6ec1ff;
+  --lilac: #c8a2ff;
+  --error: #e5484d;
+  --error-ink: #8f1d21;
+
+  /* Shape */
+  --border-width: 3px;
+  --border: var(--border-width) solid var(--ink);
+  --radius: 12px;
+  --radius-tile: 10px;
+  --radius-pill: 999px;
+  --shadow: 4px 4px 0 var(--ink);
+  --shadow-sm: 2px 2px 0 var(--ink);
+  --shadow-lg: 6px 6px 0 var(--ink);
+  --press-offset: 4px;
+
+  /* Space */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  /* Type */
+  --font-display: 'Bricolage Grotesque', 'Trebuchet MS', 'Helvetica Neue', system-ui, sans-serif;
+  --font-body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+
+  /* Motion */
+  --dur-fast: 120ms;
+  --dur: 160ms;
+  --dur-slow: 200ms;
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.2, 0.8, 0.3, 1);
+
+  /* Layout */
+  --content-max: 560px;
+  --tap-min: 44px;
+  --top-bar-height: 3.5rem;
+
+  /* Board */
+  --cell-given-bg: var(--surface);
+  --cell-blank-bg: var(--paper);
+  --cell-blank-border: var(--ink-soft);
+  --cell-selected-bg: var(--sunflower);
+  --cell-solved-bg: var(--mint);
+  --cell-wrong-bg: var(--error);
+
+  color-scheme: light;
+}
+
+[data-theme='mint'] {
+  --paper: #dff7ec;
+  --surface: #ffffff;
+  --ink: #10241c;
+  --on-accent: #10241c;
+  --ink-soft: #4a5f55;
+  --primary: #35c98b;
+  --sunflower: #ffd84d;
+  --mint: #8fe3b6;
+  --sky: #6ed8ff;
+  --lilac: #c2a8ff;
+  --error: #e5484d;
+  --error-ink: #8f1d21;
+  color-scheme: light;
+}
+
+[data-theme='grape'] {
+  --paper: #f3e8ff;
+  --surface: #ffffff;
+  --ink: #1e1030;
+  --on-accent: #1e1030;
+  --ink-soft: #574570;
+  --primary: #b673f9;
+  --sunflower: #ffd166;
+  --mint: #8de8b9;
+  --sky: #79c8ff;
+  --lilac: #d7b8ff;
+  --error: #e5484d;
+  --error-ink: #8f1d21;
+  color-scheme: light;
+}
+
+[data-theme='night'] {
+  --paper: #12131a;
+  --surface: #1c1e28;
+  --ink: #f4f1e8;
+  --on-accent: #12131a;
+  --ink-soft: #b9b3a5;
+  --primary: #ff7a5c;
+  --sunflower: #ffd24d;
+  --mint: #6fe0a8;
+  --sky: #63c8ff;
+  --lilac: #c9a6ff;
+  --error: #ff6b6e;
+  --error-ink: #ff9b9d;
+  --cell-blank-border: var(--ink-soft);
+  color-scheme: dark;
+}

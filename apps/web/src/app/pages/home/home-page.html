@@ -1,0 +1,77 @@
+<nb-top-bar />
+
+<section class="page home">
+  <header class="hero">
+    <h1>Sumday</h1>
+    <p class="muted">A crossword of equations. Fill the blanks, make every sum work.</p>
+  </header>
+
+  <a
+    nbButton
+    variant="primary"
+    size="lg"
+    block
+    [routerLink]="['/play/journey', progress.nextLevel()]"
+  >
+    <nb-icon name="play" />
+    Play level {{ progress.nextLevel() }}
+  </a>
+
+  <nb-card tone="paper" class="daily">
+    <div class="row-between">
+      <span class="section-title">Today's challenge</span>
+      <nb-badge tone="sky">{{ dailyDifficulty() }}</nb-badge>
+    </div>
+
+    <div class="daily-body">
+      <div class="stack">
+        @if (progress.dailyDoneToday()) {
+          <p class="daily-state">
+            <nb-icon name="check" />
+            Done today
+          </p>
+          <nb-stars [value]="dailyStars()" />
+        } @else {
+          <p class="daily-state">Not played yet</p>
+          <p class="muted">{{ today() }}</p>
+        }
+      </div>
+
+      <div class="streak" [class.is-cold]="progress.currentStreak() === 0">
+        <nb-icon name="flame" />
+        <span class="num">{{ progress.currentStreak() }}</span>
+        <span class="streak-label">streak</span>
+      </div>
+    </div>
+
+    <a nbButton variant="secondary" block routerLink="/daily">
+      <nb-icon name="calendar" />
+      {{ progress.dailyDoneToday() ? 'See the week' : 'Play the daily' }}
+    </a>
+  </nb-card>
+
+  <nav class="grid">
+    <a nbButton variant="secondary" block routerLink="/levels">
+      <nb-icon name="levels" />
+      Levels
+    </a>
+    <a nbButton variant="secondary" block routerLink="/shop">
+      <nb-icon name="shop" />
+      Shop
+    </a>
+  </nav>
+
+  <div class="row-between totals">
+    <span class="muted">
+      <span class="num">{{ progress.totalStars() }}</span> stars ·
+      <span class="num">{{ progress.highestCleared() }}</span> levels cleared
+    </span>
+    <a nbButton variant="ghost" size="sm" routerLink="/settings" aria-label="Settings">
+      <nb-icon name="settings" />
+    </a>
+  </div>
+
+  @if (isDev) {
+    <a nbButton variant="ghost" size="sm" block routerLink="/styleguide">Style guide (dev)</a>
+  }
+</section>

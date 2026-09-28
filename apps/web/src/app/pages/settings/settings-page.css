@@ -1,0 +1,20 @@
+nb-card.setting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.setting-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+}
+
+h3 {
+  font-size: var(--text-xl);
+}
+
+.version {
+  text-align: center;
+}

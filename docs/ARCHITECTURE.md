@@ -151,3 +151,131 @@ board, and agreement between `buildGrid` and the layout.
 
 Measured on Node 24: expert generation averages **~1.4 ms** (p95 13 ms) against a 50 ms
 budget.
+
+---
+
+## `apps/web`
+
+Angular 22: standalone components everywhere, signals for all state, zoneless change
+detection, the new control flow, and plain CSS with custom properties. No component
+library, no CSS framework.
+
+The engine is reached through the workspace name `@sumday/engine`, mapped by `tsconfig`
+paths to the engine's **sources**. The app therefore needs no build step for the engine, and
+still gets full type checking and tree shaking - a level page pulls in generation but not
+the solver.
+
+### State
+
+Two stores, both `@ngrx/signals`.
+
+**`ProgressStore`** (root) is everything the player keeps: coins, hints, level results, the
+daily history and streak, owned themes, the active theme, the free-hint allowance, and
+settings. Its state is exactly the save file minus its version, which makes persistence a
+one-liner: a single `watchState` subscription writes through to the `SaveAdapter` on every
+change, so no method can forget to save.
+
+**`GameStore`** is provided by the Play page, so leaving the page throws the run away.
+It holds the puzzle, the answers, the tray, the selection, mistakes, hints used and the
+timer, and exposes the board as one flat `cells` array of fully-resolved render cells -
+text, state flags and aria-label included - so templates never call a function to work out
+what a cell looks like.
+
+Two details worth knowing:
+
+- An equation with **no blanks** is complete from the moment it loads. Those are excluded
+  from "solved", so nothing is mint before the player has placed a tile, and the HUD counts
+  only the equations the run is actually scored against.
+- A cell is mint when **any** of its equations is solved, which is what makes a crossing
+  cell light up with the row it completed.
+
+### Persistence
+
+`SaveAdapter` is an abstract class (so it doubles as the DI token) with `load`, `save`,
+`clear` and `writable`. `LocalSaveAdapter` wraps every `localStorage` call in try/catch:
+private browsing, a full quota and disabled storage all throw on access rather than
+returning null. When storage turns out to be unusable the game keeps running from memory and
+Settings says so.
+
+The save is versioned. `migrate()` treats stored data as untrusted input - every field is
+read with a fallback and clamped, corrupt JSON starts fresh, and nothing in that path
+throws. Adding a field means adding one step to `MIGRATIONS`, keyed by the version it
+upgrades from.
+
+`ApiSaveAdapter` will slot in behind the same interface once accounts exist.
+
+### Swappable services
+
+Bound in `app.config.ts`, which is the only file that changes when the app goes online or
+mobile:
+
+| Interface | Today | Later |
+| --- | --- | --- |
+| `SaveAdapter` | `LocalSaveAdapter` | `ApiSaveAdapter` |
+| `AdsService` | `FakeAdsService` - a two-second overlay marked a placeholder | Capacitor AdMob |
+| `PurchaseService` | `UnavailablePurchaseService` - products listed, all disabled | Capacitor IAP |
+| `AnalyticsService` | `ConsoleAnalyticsService` | a real sink |
+
+### Design system
+
+`tokens.css` holds every colour, border, radius, shadow, space, type, motion and layout
+value. A theme redefines nothing but those variables under a `data-theme` attribute;
+`ThemeService` swaps the attribute and the browser theme colour, and that is the entire
+theming mechanism.
+
+Two tokens carry the contrast rule. `--ink` is the border, shadow and body-text colour;
+`--on-accent` is the text colour on top of a filled accent. They are identical in the light
+themes and swap in Night Market, which is what lets every accent stay bright without any
+pair failing AA. `/styleguide` measures the ratios from the live tokens at runtime, so the
+table cannot drift from the CSS.
+
+Every accent pair clears AA. The one exception is by design: ink on the error red is
+4.45:1, which passes AA for large bold text - the only thing ever drawn on it - while
+smaller error text uses `--error-ink` on the page background at 8.15:1.
+
+### The board
+
+The board is a single CSS grid, and it exploits the engine's parity lattice: number cells
+are always on even rows and columns, symbol cells always on odd ones. So the track list
+alternates a wide number track with a narrow symbol one:
+
+```
+grid-template-columns: var(--cell) var(--symbol) var(--cell) ... var(--cell)
+```
+
+Symbol tracks take 56% of a number track, which is what makes a 13-wide expert grid fit a
+360px phone with no horizontal scrolling - an even grid would leave the numbers unreadably
+small. Cell size is pure CSS:
+
+```
+--cell: min(3.25rem, (available - gaps) / (numberCols + 0.56 * symbolCols))
+```
+
+Rows and columns always have odd length (equations start and end on even coordinates), so
+the alternating pattern always ends on a number track. Empty cells are not rendered at all;
+every cell places itself with `grid-row` / `grid-column`.
+
+### Input
+
+Tap a cell, then a tile. Selection starts on the first empty blank and moves to the next one
+in reading order after every correct placement.
+
+Typing works too, and handles multi-digit values: a digit is committed as soon as no
+remaining tile value has it as a prefix, otherwise it waits 900ms for a second digit. With
+tiles `2` and `26` on the board, typing `2` waits and `26` commits immediately. Typing a
+value with no matching tile is ignored with a toast - it is a typo, not a mistake, and never
+costs a life.
+
+### Accessibility
+
+Everything interactive is a real `<button>` or `<a>`; `nbButton` is an attribute selector
+precisely so native semantics are kept rather than recreated. Board cells carry labels like
+`Row 3, column 5, empty`, operators read as "plus" and "divided by", locked levels announce
+themselves as locked. Dialogs trap focus and restore page scrolling on destroy. All motion
+is disabled under `prefers-reduced-motion`.
+
+### Tuning
+
+- Economy: `core/config/economy.ts` - every reward, price, cap and the star thresholds.
+- Themes: `core/config/themes.ts` plus one block in `tokens.css`.
+- Difficulty: `DIFFICULTY_CONFIG` in the engine.

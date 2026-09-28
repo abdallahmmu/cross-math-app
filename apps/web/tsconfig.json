@@ -1,0 +1,25 @@
+{
+  "compileOnSave": false,
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["es2022", "dom"],
+    "module": "preserve",
+    "declaration": false,
+    "declarationMap": false,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "paths": {
+      "@sumday/engine": ["../../packages/engine/src/index.ts"]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true,
+    "typeCheckHostBindings": true
+  },
+  "files": [],
+  "references": [{ "path": "./tsconfig.app.json" }]
+}

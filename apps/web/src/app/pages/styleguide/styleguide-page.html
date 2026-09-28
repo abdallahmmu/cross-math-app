@@ -1,0 +1,231 @@
+<nb-top-bar title="Style guide" backTo="/" />
+
+<section class="page guide">
+  <p class="muted">
+    Development only. Every component and state, plus contrast measured from the live tokens.
+  </p>
+
+  <section class="stack">
+    <span class="section-title">Theme preview</span>
+    <div class="wrap">
+      @for (theme of themeOptions; track theme.id) {
+        <button nbButton variant="secondary" size="sm" (click)="previewTheme.set(theme.id)">
+          {{ theme.name }}
+        </button>
+      }
+    </div>
+    <p class="muted">Preview only - it does not buy or save the theme.</p>
+  </section>
+
+  <section class="stack">
+    <span class="section-title">Contrast</span>
+    <div class="scroll-x">
+      <table>
+        <caption class="visually-hidden">
+          Contrast ratios for every text and background pair
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Pair</th>
+            <th scope="col">Sample</th>
+            <th scope="col">Ratio</th>
+            <th scope="col">WCAG</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of contrast(); track row.label) {
+            <tr>
+              <th scope="row">{{ row.label }}</th>
+              <td>
+                <span
+                  class="sample"
+                  [style.color]="row.foreground"
+                  [style.background]="row.background"
+                >
+                  42
+                </span>
+              </td>
+              <td class="num">{{ ratioLabel(row) }}</td>
+              <td>{{ ratioVerdict(row) }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="stack">
+    <span class="section-title">Buttons</span>
+    @for (variant of buttonVariants; track variant) {
+      <div class="wrap">
+        <button nbButton [variant]="variant" size="sm">
+          @if (variant === 'icon') {
+            <nb-icon name="play" />
+          } @else {
+            {{ variant }} sm
+          }
+        </button>
+        <button nbButton [variant]="variant">
+          @if (variant === 'icon') {
+            <nb-icon name="play" />
+          } @else {
+            {{ variant }} md
+          }
+        </button>
+        <button nbButton [variant]="variant" size="lg">
+          @if (variant === 'icon') {
+            <nb-icon name="play" />
+          } @else {
+            {{ variant }} lg
+          }
+        </button>
+        <button nbButton [variant]="variant" disabled>
+          @if (variant === 'icon') {
+            <nb-icon name="play" />
+          } @else {
+            disabled
+          }
+        </button>
+      </div>
+    }
+    <button nbButton variant="primary" size="lg" block>block</button>
+  </section>
+
+  <section class="stack">
+    <span class="section-title">Cards</span>
+    <div class="grid-2">
+      @for (tone of cardTones; track tone) {
+        <nb-card [tone]="tone">{{ tone }}</nb-card>
+      }
+      <nb-card flat>flat</nb-card>
+    </div>
+  </section>
+
+  <section class="stack">
+    <span class="section-title">Badges</span>
+    <div class="wrap">
+      @for (tone of badgeTones; track tone) {
+        <nb-badge [tone]="tone">{{ tone }}</nb-badge>
+      }
+    </div>
+  </section>
+
+  <section class="stack">
+    <span class="section-title">Counters and stars</span>
+    <div class="wrap">
+      <nb-counter class="tone-coin" icon="coin" [value]="1240" label="coins" />
+      <nb-counter class="tone-hint" icon="hint" [value]="3" label="hints" />
+      <nb-stars [value]="0" />
+      <nb-stars [value]="1" />
+      <nb-stars [value]="2" />
+      <nb-stars [value]="3" />
+    </div>
+  </section>
+
+  <section class="stack">
+    <span class="section-title">Icons</span>
+    <div class="wrap icons">
+      @for (icon of iconNames; track icon) {
+        <span class="icon-chip">
+          <nb-icon [name]="icon" />
+          <span class="muted">{{ icon }}</span>
+        </span>
+      }
+    </div>
+  </section>
+
+  <section class="stack">
+    <span class="section-title">Tiles</span>
+    <div class="wrap">
+      <button appTile [value]="7"></button>
+      <button appTile [value]="42"></button>
+      <button appTile [value]="99" wrong></button>
+    </div>
+  </section>
+
+  <section class="stack">
+    <span class="section-title">Board</span>
+    <app-board />
+    <app-tray />
+    <div class="wrap">
+      <button nbButton variant="secondary" size="sm" (click)="placeCorrect()">Place correct</button>
+      <button nbButton variant="secondary" size="sm" (click)="placeWrong()">Place wrong</button>
+      <button nbButton variant="ghost" size="sm" (click)="resetBoard()">Reset</button>
+    </div>
+    <p class="muted">
+      Status: {{ game.status() }} · mistakes {{ game.mistakes() }} · solved
+      {{ game.solvedCount() }}/{{ game.equationCount() }}
+    </p>
+  </section>
+
+  <section class="stack">
+    <span class="section-title">Overlays</span>
+    <div class="wrap">
+      <button nbButton variant="secondary" size="sm" (click)="showModal.set(true)">Modal</button>
+      <button nbButton variant="secondary" size="sm" (click)="showSheet.set(true)">Sheet</button>
+      <button nbButton variant="secondary" size="sm" (click)="showWin.set(true)">Win modal</button>
+      <button nbButton variant="secondary" size="sm" (click)="showHintSheet.set(true)">
+        Hint sheet
+      </button>
+    </div>
+  </section>
+
+  <section class="stack">
+    <span class="section-title">Toasts</span>
+    <div class="wrap">
+      <button nbButton variant="secondary" size="sm" (click)="fireToast('ink')">Default</button>
+      <button nbButton variant="secondary" size="sm" (click)="fireToast('mint')">Success</button>
+      <button nbButton variant="secondary" size="sm" (click)="fireToast('error')">Error</button>
+    </div>
+  </section>
+
+  <section class="stack">
+    <span class="section-title">Motion</span>
+    <div class="wrap">
+      <span class="motion anim-pop">pop</span>
+      <span class="motion anim-shake">shake</span>
+    </div>
+    <p class="muted">Both are disabled under prefers-reduced-motion.</p>
+  </section>
+</section>
+
+@if (showModal()) {
+  <nb-modal label="Example modal" variant="modal" (dismiss)="showModal.set(false)">
+    <div class="stack">
+      <h3>Centred modal</h3>
+      <p>Escape and the backdrop both dismiss this one.</p>
+      <button nbButton variant="primary" block (click)="showModal.set(false)">Close</button>
+    </div>
+  </nb-modal>
+}
+
+@if (showSheet()) {
+  <nb-modal label="Example sheet" (dismiss)="showSheet.set(false)">
+    <div class="stack">
+      <h3>Bottom sheet</h3>
+      <p>Rises from the bottom edge on a phone, centres on a wider screen.</p>
+      <button nbButton variant="primary" block (click)="showSheet.set(false)">Close</button>
+    </div>
+  </nb-modal>
+}
+
+@if (showWin()) {
+  <app-win-modal
+    [summary]="winSummary"
+    (next)="showWin.set(false)"
+    (replay)="showWin.set(false)"
+    (leave)="showWin.set(false)"
+  />
+}
+
+@if (showHintSheet()) {
+  <app-hint-sheet
+    [coins]="120"
+    [hintPrice]="40"
+    [freeLeft]="2"
+    (buy)="showHintSheet.set(false)"
+    (watch)="showHintSheet.set(false)"
+    (shop)="showHintSheet.set(false)"
+    (dismiss)="showHintSheet.set(false)"
+  />
+}

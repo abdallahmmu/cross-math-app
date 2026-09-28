@@ -1,0 +1,65 @@
+<nb-top-bar title="Settings" backTo="/" />
+
+<section class="page settings">
+  <nb-card class="setting">
+    <div class="stack">
+      <p class="setting-title">Sound</p>
+      <p class="muted">Placeholder - no audio is loaded yet.</p>
+    </div>
+    <button
+      nbButton
+      [variant]="progress.sound() ? 'primary' : 'ghost'"
+      role="switch"
+      [attr.aria-checked]="progress.sound()"
+      aria-label="Sound"
+      (click)="toggleSound()"
+    >
+      {{ progress.sound() ? 'On' : 'Off' }}
+    </button>
+  </nb-card>
+
+  <nb-card class="setting">
+    <div class="stack">
+      <p class="setting-title">Theme</p>
+      <p class="muted">{{ themeName() }}</p>
+    </div>
+    <a nbButton variant="secondary" routerLink="/shop">Change</a>
+  </nb-card>
+
+  @if (!storageWritable) {
+    <nb-card tone="paper">
+      <div class="stack">
+        <nb-badge tone="error">Storage blocked</nb-badge>
+        <p class="muted">
+          This browser is refusing to save. You can still play, but progress will not survive a
+          reload.
+        </p>
+      </div>
+    </nb-card>
+  }
+
+  <nb-card class="setting">
+    <div class="stack">
+      <p class="setting-title">Reset progress</p>
+      <p class="muted">Clears levels, stars, coins, hints and the streak.</p>
+    </div>
+    <button nbButton variant="secondary" (click)="confirmingReset.set(true)">Reset</button>
+  </nb-card>
+
+  <p class="muted version">Sumday - web build</p>
+</section>
+
+@if (confirmingReset()) {
+  <nb-modal label="Reset progress" variant="modal" (dismiss)="confirmingReset.set(false)">
+    <div class="stack">
+      <h3>Reset everything?</h3>
+      <p>
+        You will lose <span class="num">{{ progress.totalStars() }}</span> stars,
+        <span class="num">{{ progress.coins() }}</span> coins and a
+        <span class="num">{{ progress.currentStreak() }}</span> day streak. This cannot be undone.
+      </p>
+      <button nbButton variant="primary" block (click)="resetProgress()">Yes, reset</button>
+      <button nbButton variant="ghost" block (click)="confirmingReset.set(false)">Keep my progress</button>
+    </div>
+  </nb-modal>
+}

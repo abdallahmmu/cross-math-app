@@ -1,0 +1,44 @@
+<nb-top-bar title="Levels" backTo="/" />
+
+<section class="page levels">
+  @for (tier of tiers(); track tier.difficulty) {
+    <section class="tier">
+      <header class="row-between">
+        <nb-badge [tone]="tier.difficulty === 'expert' ? 'lilac' : 'sky'">
+          {{ tier.difficulty }}
+        </nb-badge>
+        <span class="muted">
+          <span class="num">{{ tier.stars }}</span> / {{ tier.maxStars }} stars
+        </span>
+      </header>
+
+      <ul class="tier-grid">
+        @for (tile of tier.levels; track tile.level) {
+          <li>
+            @if (tile.unlocked) {
+              <a
+                class="level"
+                [class.is-cleared]="tile.stars > 0"
+                [routerLink]="['/play/journey', tile.level]"
+                [attr.aria-label]="
+                  'Level ' + tile.level + ', ' + tile.stars + ' of 3 stars'
+                "
+              >
+                <span class="num">{{ tile.level }}</span>
+                <nb-stars class="mini" [value]="tile.stars" />
+              </a>
+            } @else {
+              <span
+                class="level is-locked"
+                [attr.aria-label]="'Level ' + tile.level + ', locked'"
+                role="img"
+              >
+                <nb-icon name="lock" />
+              </span>
+            }
+          </li>
+        }
+      </ul>
+    </section>
+  }
+</section>

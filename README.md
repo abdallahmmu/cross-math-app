@@ -24,8 +24,9 @@ Run from the repository root:
 
 | Command | What it does |
 | --- | --- |
-| `npm test` | Runs every workspace's tests (currently the engine's Vitest suite) |
-| `npm run build` | Builds every workspace |
+| `npm start` | Runs the game at http://localhost:4200 |
+| `npm test` | Runs every workspace's tests (the engine's Vitest suite) |
+| `npm run build` | Builds the engine, then the production web bundle |
 | `npm run typecheck` | Type-checks every workspace |
 
 Engine-specific:
@@ -63,15 +64,34 @@ tiles: 5 5 8 45 45
 
 ```
 packages/engine    @sumday/engine - the puzzle engine. Pure TypeScript, zero dependencies.
-apps/web           the Angular game (Phase 2)
+apps/web           the game: Angular 22, standalone, signals, zoneless, plain CSS.
 docs               architecture and the plan for going online
 ```
+
+## Playing it
+
+```bash
+npm start     # http://localhost:4200
+```
+
+- **Home** - today's daily, the next journey level, coins and hints.
+- **Levels** - 100 levels in four tiers, stars per level, each one unlocked by the last.
+- **Play** - tap a cell then a tile, or just type the number. `Backspace` clears what you
+  typed, `Enter` commits it early.
+- **Daily** - one puzzle a day, a seven-day strip and the streak.
+- **Shop** - hint packs, four themes, and the real-money section that arrives with the
+  mobile build.
+- **Settings** - sound placeholder and a reset with a confirmation.
+- **/styleguide** - development only: every component and state, plus contrast ratios
+  measured from the live tokens.
 
 ## Status
 
 - **Phase 1 - engine: done.** Deterministic generation, a uniqueness solver, validation,
   hints, and the journey/daily schedules. 70 tests.
-- **Phase 2 - the game:** not started.
+- **Phase 2 - the game: done.** All seven screens, the Neubrutalism design system, four
+  themes, the coin and hint economy, local saves with migration, and stubbed ads,
+  purchases and analytics behind interfaces.
 - **Phase 3 - online plan:** not started.
 
 ## How the engine works, briefly

@@ -1,0 +1,68 @@
+<nb-top-bar title="Daily" backTo="/" />
+
+<section class="page daily">
+  <nb-card tone="paper" class="today">
+    <div class="row-between">
+      <span class="section-title">{{ todayLong() }}</span>
+      <nb-badge tone="sky">{{ difficulty() }}</nb-badge>
+    </div>
+
+    @if (progress.dailyDoneToday()) {
+      <div class="done">
+        <nb-icon name="check" />
+        <span>Solved today</span>
+        <nb-stars [value]="todayStars()" />
+      </div>
+      <a nbButton variant="secondary" block [routerLink]="['/play/daily', today()]">
+        Play it again
+      </a>
+    } @else {
+      <p class="pitch">One puzzle a day. Keep the streak alive.</p>
+      <p class="muted">
+        Solving it pays <span class="num">{{ reward() }}</span> coins today.
+      </p>
+      <a nbButton variant="primary" size="lg" block [routerLink]="['/play/daily', today()]">
+        <nb-icon name="play" />
+        Play today's puzzle
+      </a>
+    }
+  </nb-card>
+
+  <section class="stack">
+    <div class="row-between">
+      <span class="section-title">Last {{ week().length }} days</span>
+      <span class="streak">
+        <nb-icon name="flame" />
+        <span class="num">{{ progress.currentStreak() }}</span>
+        day streak
+      </span>
+    </div>
+
+    <ul class="strip">
+      @for (day of week(); track day.date) {
+        <li>
+          <a
+            class="day"
+            [class.is-done]="day.done"
+            [class.is-today]="day.isToday"
+            [routerLink]="['/play/daily', day.date]"
+            [attr.aria-label]="
+              day.date +
+              ', ' +
+              day.difficulty +
+              ', ' +
+              (day.done ? day.stars + ' of 3 stars' : 'not played')
+            "
+          >
+            <span class="initial">{{ day.initial }}</span>
+            <span class="num date">{{ day.dayOfMonth }}</span>
+            @if (day.done) {
+              <nb-icon name="check" />
+            }
+          </a>
+        </li>
+      }
+    </ul>
+    <p class="muted">Missing a day resets the streak to zero.</p>
+  </section>
+</section>

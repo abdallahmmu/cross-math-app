@@ -1,0 +1,79 @@
+.guide > section {
+  padding-bottom: var(--space-4);
+  border-bottom: 2px dashed var(--cell-blank-border);
+}
+
+.wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+th,
+td {
+  padding: var(--space-2);
+  border-bottom: 2px solid var(--cell-blank-border);
+  text-align: left;
+  white-space: nowrap;
+}
+
+thead th {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.sample {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  padding: 0.15rem var(--space-2);
+  border: 2px solid currentColor;
+  border-radius: 6px;
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.icon-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border: 2px solid var(--cell-blank-border);
+  border-radius: var(--radius-pill);
+}
+
+.motion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3) var(--space-4);
+  border: var(--border);
+  border-radius: var(--radius);
+  background: var(--sunflower);
+  color: var(--on-accent);
+  font-family: var(--font-display);
+  font-weight: 800;
+  animation-iteration-count: infinite;
+  animation-duration: 1.4s;
+}
+
+h3 {
+  font-size: var(--text-xl);
+}
