@@ -298,3 +298,14 @@ is disabled under `prefers-reduced-motion`.
 - Economy: `core/config/economy.ts` - every reward, price, cap and the star thresholds.
 - Themes: `core/config/themes.ts` plus one block in `tokens.css`.
 - Difficulty: `DIFFICULTY_CONFIG` in the engine.
+
+---
+
+## Where this is going
+
+[ONLINE.md](ONLINE.md) covers accounts, cloud save, leaderboards, leagues, duels and the
+mobile build. The short version: because a puzzle is a pure function of its seed, the
+backend regenerates puzzles instead of storing them, and verifies submitted answers with
+this same engine package. The one rule that protects all of it is that **a published seed
+must generate the same puzzle forever** - so a change to generation means a new seed
+namespace, not an edit to the old one.

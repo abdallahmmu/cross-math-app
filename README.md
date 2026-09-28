@@ -92,7 +92,10 @@ npm start     # http://localhost:4200
 - **Phase 2 - the game: done.** All seven screens, the Neubrutalism design system, four
   themes, the coin and hint economy, local saves with migration, and stubbed ads,
   purchases and analytics behind interfaces.
-- **Phase 3 - online plan:** not started.
+- **Phase 3 - online plan: done.** [docs/ONLINE.md](docs/ONLINE.md) - how the seed-determinism
+  makes a backend cheap, the anti-cheat model, guest-first accounts, the cloud-save merge
+  rules, the order to ship the online features in, a validated Prisma schema, the REST
+  surface, and the mobile monetisation path.
 
 ## How the engine works, briefly
 
