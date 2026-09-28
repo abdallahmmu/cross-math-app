@@ -37,6 +37,28 @@ npm run build --workspace @sumday/engine         # emit dist/ (ESM + .d.ts)
 npm run verify:node --workspace @sumday/engine   # prove the build runs in plain Node
 ```
 
+To look at what the generator actually produces:
+
+```bash
+npm run print --workspace @sumday/engine -- --journey 12
+npm run print --workspace @sumday/engine -- --daily 2026-09-28
+npm run print --workspace @sumday/engine -- --difficulty expert --count 3
+npm run print --workspace @sumday/engine -- --difficulty hard --solved
+```
+
+```
+medium-4x0du4  seed "journey-12"  medium  7x9  5 equations  5 blanks  1.69 ms
+tiles: 5 5 8 45 45
+
+                         _
+                         +
+ _           8  ×  _  = 40
+ −           +           =
+42  − 34  =  _           _
+ =           =
+ 3          16
+```
+
 ## Layout
 
 ```
