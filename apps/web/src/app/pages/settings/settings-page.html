@@ -18,14 +18,6 @@
     </button>
   </nb-card>
 
-  <nb-card class="setting">
-    <div class="stack">
-      <p class="setting-title">Theme</p>
-      <p class="muted">{{ themeName() }}</p>
-    </div>
-    <a nbButton variant="secondary" routerLink="/shop">Change</a>
-  </nb-card>
-
   @if (!storageWritable) {
     <nb-card tone="paper">
       <div class="stack">

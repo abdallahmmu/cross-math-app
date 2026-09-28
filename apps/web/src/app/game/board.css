@@ -36,7 +36,10 @@
   line-height: 1;
   transition:
     background-color var(--dur-fast) var(--ease-out),
-    border-color var(--dur-fast) var(--ease-out);
+    border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+  animation: nb-cell-in var(--dur-slow) var(--ease-spring) backwards;
+  animation-delay: var(--enter-delay, 0ms);
 }
 
 .is-given {
@@ -65,6 +68,14 @@
   border-style: solid;
   border-color: var(--ink);
   background: var(--surface);
+}
+
+@media (hover: hover) {
+  .is-blank:not(.is-selected):hover {
+    border-style: solid;
+    border-color: var(--ink);
+    background: var(--surface);
+  }
 }
 
 .is-blank.is-selected {

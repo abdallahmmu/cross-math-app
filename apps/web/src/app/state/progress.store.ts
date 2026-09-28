@@ -1,4 +1,4 @@
-import { computed, effect, inject } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import {
   patchState,
   signalStore,
@@ -11,10 +11,8 @@ import {
 import type { Difficulty } from '@sumday/engine';
 import { AnalyticsService } from '../core/analytics/analytics.service';
 import { dailyCoins, ECONOMY, journeyCoins, type HintPack } from '../core/config/economy';
-import { findTheme, THEMES, type ThemeId, type ThemeOption } from '../core/config/themes';
 import { SaveAdapter } from '../core/save/save-adapter';
 import { createSave, SAVE_VERSION, type DailyRecord, type LevelResult, type SaveData } from '../core/save/save-schema';
-import { ThemeService } from '../core/theme/theme.service';
 import { Clock } from '../core/time/clock';
 import { daysBetween } from '../core/time/local-date';
 
@@ -87,9 +85,6 @@ export const ProgressStore = signalStore(
         store.freeHintsDate() === clock.today()
           ? Math.max(0, ECONOMY.rewardedAd.maxPerDay - store.freeHintsUsed())
           : ECONOMY.rewardedAd.maxPerDay,
-      ),
-      ownedThemeOptions: computed((): readonly ThemeOption[] =>
-        THEMES.filter((theme) => store.ownedThemes().includes(theme.id)),
       ),
     };
   }),
@@ -205,24 +200,6 @@ export const ProgressStore = signalStore(
         return true;
       },
 
-      buyTheme(id: ThemeId): boolean {
-        if (store.ownedThemes().includes(id)) return false;
-        const theme = findTheme(id);
-        if (store.coins() < theme.coins) return false;
-
-        patchState(store, {
-          coins: store.coins() - theme.coins,
-          ownedThemes: [...store.ownedThemes(), id],
-          activeTheme: id,
-        });
-        analytics.track({ name: 'purchase', item: `theme-${id}`, coins: theme.coins });
-        return true;
-      },
-
-      setTheme(id: ThemeId): void {
-        if (!store.ownedThemes().includes(id)) return;
-        patchState(store, { activeTheme: id });
-      },
 
       setSound(on: boolean): void {
         patchState(store, { sound: on });
@@ -237,7 +214,6 @@ export const ProgressStore = signalStore(
   withHooks({
     onInit(store) {
       const adapter = inject(SaveAdapter);
-      const themes = inject(ThemeService);
       const clock = inject(Clock);
 
       const stored = adapter.load();
@@ -251,7 +227,6 @@ export const ProgressStore = signalStore(
         patchState(store, { freeHintsDate: clock.today(), freeHintsUsed: 0 });
       }
 
-      effect(() => themes.apply(store.activeTheme()));
       watchState(store, (state) => adapter.save(toSave(state)));
     },
   }),

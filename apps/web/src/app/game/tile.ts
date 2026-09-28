@@ -35,8 +35,16 @@ import { booleanAttribute, ChangeDetectionStrategy, Component, input } from '@an
       transition:
         transform var(--dur-fast) var(--ease-out),
         box-shadow var(--dur-fast) var(--ease-out);
-      animation: nb-pop var(--dur-slow) var(--ease-spring);
+      animation: nb-pop var(--dur-slow) var(--ease-spring) backwards;
+      animation-delay: var(--enter-delay, 0ms);
     }
+    @media (hover: hover) {
+      :host(:hover) {
+        transform: translate(-2px, -2px);
+        box-shadow: 6px 6px 0 var(--ink);
+      }
+    }
+
     :host(:active) {
       transform: translate(var(--press-offset), var(--press-offset));
       box-shadow: 0 0 0 var(--ink);

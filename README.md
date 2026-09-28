@@ -79,8 +79,7 @@ npm start     # http://localhost:4200
 - **Play** - drag a tile onto a cell, tap a cell and then a tile, or type the number.
   `Backspace` clears what you typed, `Enter` commits it early.
 - **Daily** - one puzzle a day, a seven-day strip and the streak.
-- **Shop** - hint packs, four themes, and the real-money section that arrives with the
-  mobile build.
+- **Shop** - hint packs and the real-money section that arrives with the mobile build.
 - **Settings** - sound placeholder and a reset with a confirmation.
 - **/styleguide** - development only: every component and state, plus contrast ratios
   measured from the live tokens.
@@ -89,9 +88,9 @@ npm start     # http://localhost:4200
 
 - **Phase 1 - engine: done.** Deterministic generation, a uniqueness solver, validation,
   hints, and the journey/daily schedules. 70 tests.
-- **Phase 2 - the game: done.** All seven screens, the Neubrutalism design system, four
-  themes, the coin and hint economy, local saves with migration, and stubbed ads,
-  purchases and analytics behind interfaces.
+- **Phase 2 - the game: done.** All seven screens, the Neubrutalism design system, the
+  coin and hint economy, local saves with migration, and stubbed ads, purchases and
+  analytics behind interfaces.
 - **Phase 3 - online plan: done.** [docs/ONLINE.md](docs/ONLINE.md) - how the seed-determinism
   makes a backend cheap, the anti-cheat model, guest-first accounts, the cloud-save merge
   rules, the order to ship the online features in, a validated Prisma schema, the REST

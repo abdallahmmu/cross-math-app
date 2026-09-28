@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  input,
+} from '@angular/core';
 import { NbIcon, type IconName } from './nb-icon';
 
 /** Icon plus a tabular number: the coin and hint counters in the top bar. */
@@ -40,4 +48,34 @@ export class NbCounter {
   readonly label = input.required<string>();
 
   protected readonly ariaLabel = computed(() => `${this.value()} ${this.label()}`);
+
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private previous: number | null = null;
+
+  constructor() {
+    effect(() => {
+      const value = this.value();
+      const previous = this.previous;
+      this.previous = value;
+      if (previous !== null && previous !== value) this.bump(value > previous);
+    });
+  }
+
+  /**
+   * Driven from script rather than by toggling a class: two changes in quick
+   * succession have to restart the animation, and re-adding a class that is
+   * already there does not. This path is outside CSS, so the reduced-motion
+   * preference is checked here rather than inherited from the global rule.
+   */
+  private bump(up: boolean): void {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    this.host.nativeElement.animate(
+      [
+        { transform: 'scale(1)' },
+        { transform: `scale(${up ? 1.2 : 0.92})` },
+        { transform: 'scale(1)' },
+      ],
+      { duration: 320, easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)' },
+    );
+  }
 }

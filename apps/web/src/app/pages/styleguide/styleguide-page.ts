@@ -4,13 +4,10 @@ import {
   Component,
   computed,
   DOCUMENT,
-  effect,
   inject,
   signal,
 } from '@angular/core';
 import { generatePuzzle } from '@sumday/engine';
-import { THEMES, type ThemeId } from '../../core/config/themes';
-import { ThemeService } from '../../core/theme/theme.service';
 import { Board } from '../../game/board';
 import { DragGhost } from '../../game/drag-ghost';
 import { HintSheet } from '../../game/hint-sheet';
@@ -90,11 +87,9 @@ const WIN_SUMMARY: WinSummary = {
 })
 export class StyleguidePage {
   protected readonly game = inject(GameStore);
-  private readonly themes = inject(ThemeService);
   private readonly toasts = inject(ToastService);
   private readonly document = inject(DOCUMENT);
 
-  protected readonly themeOptions = THEMES;
   protected readonly buttonVariants: readonly ButtonVariant[] = [
     'primary',
     'secondary',
@@ -142,7 +137,6 @@ export class StyleguidePage {
   protected readonly showSheet = signal(false);
   protected readonly showWin = signal(false);
   protected readonly showHintSheet = signal(false);
-  protected readonly previewTheme = signal<ThemeId | null>(null);
 
   private readonly contrastTick = signal(0);
   protected readonly contrast = computed<readonly ContrastRow[]>(() => {
@@ -159,13 +153,6 @@ export class StyleguidePage {
     this.game.load(generatePuzzle({ seed: 'styleguide', difficulty: 'easy' }));
 
     afterNextRender(() => this.contrastTick.update((tick) => tick + 1));
-    effect(() => {
-      const theme = this.previewTheme();
-      if (theme !== null) {
-        this.themes.apply(theme);
-        this.contrastTick.update((tick) => tick + 1);
-      }
-    });
   }
 
   protected fireToast(tone: 'ink' | 'mint' | 'error'): void {

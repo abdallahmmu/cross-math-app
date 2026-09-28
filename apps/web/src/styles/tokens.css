@@ -2,20 +2,19 @@
  * Design tokens for Sumday. Neubrutalism, warm and playful: flat colour, thick
  * ink borders, hard offset shadows, no blur, no gradients.
  *
- * A theme only ever redefines the variables in this file. Nothing else in the
- * app needs to know a theme exists.
+ * Every colour in the app comes from here, so a second palette would only ever
+ * be another block of these variables.
  *
  * Contrast rule
  * -------------
  * `--ink` is the border, shadow and body-text colour. `--on-accent` is the text
  * colour used on top of a filled accent (primary, sunflower, mint, sky, lilac).
- * The two are the same in light themes and swap in the dark one, which is what
- * lets every accent stay bright without any text/background pair failing AA.
+ * They are the same value today; keeping them apart is what would let a dark
+ * palette keep bright accents without any text/background pair failing AA.
  * Measured ratios are listed on /styleguide.
  */
 
 :root {
-  /* Classic (free) */
   --paper: #fff4e0;
   --surface: #ffffff;
   --ink: #1a1a1a;
@@ -81,53 +80,4 @@
   --cell-wrong-bg: var(--error);
 
   color-scheme: light;
-}
-
-[data-theme='mint'] {
-  --paper: #dff7ec;
-  --surface: #ffffff;
-  --ink: #10241c;
-  --on-accent: #10241c;
-  --ink-soft: #4a5f55;
-  --primary: #35c98b;
-  --sunflower: #ffd84d;
-  --mint: #8fe3b6;
-  --sky: #6ed8ff;
-  --lilac: #c2a8ff;
-  --error: #e5484d;
-  --error-ink: #8f1d21;
-  color-scheme: light;
-}
-
-[data-theme='grape'] {
-  --paper: #f3e8ff;
-  --surface: #ffffff;
-  --ink: #1e1030;
-  --on-accent: #1e1030;
-  --ink-soft: #574570;
-  --primary: #b673f9;
-  --sunflower: #ffd166;
-  --mint: #8de8b9;
-  --sky: #79c8ff;
-  --lilac: #d7b8ff;
-  --error: #e5484d;
-  --error-ink: #8f1d21;
-  color-scheme: light;
-}
-
-[data-theme='night'] {
-  --paper: #12131a;
-  --surface: #1c1e28;
-  --ink: #f4f1e8;
-  --on-accent: #12131a;
-  --ink-soft: #b9b3a5;
-  --primary: #ff7a5c;
-  --sunflower: #ffd24d;
-  --mint: #6fe0a8;
-  --sky: #63c8ff;
-  --lilac: #c9a6ff;
-  --error: #ff6b6e;
-  --error-ink: #ff9b9d;
-  --cell-blank-border: var(--ink-soft);
-  color-scheme: dark;
 }

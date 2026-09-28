@@ -29,7 +29,7 @@ import { TileDragService } from './tile-drag.service';
       [style.grid-template-columns]="columnTracks()"
       [style.grid-template-rows]="rowTracks()"
     >
-      @for (cell of store.cells(); track cell.key) {
+      @for (cell of store.cells(); track cell.key; let index = $index) {
         @if (cell.blank) {
           <button
             class="cell is-blank"
@@ -43,6 +43,7 @@ import { TileDragService } from './tile-drag.service';
             [attr.data-cell]="cell.filled ? null : cell.key"
             [style.grid-row]="cell.row + 1"
             [style.grid-column]="cell.col + 1"
+            [style.--enter-delay]="enterDelay(index)"
             [attr.aria-label]="cell.label"
             [attr.aria-pressed]="cell.selected"
             (click)="select(cell.key)"
@@ -55,6 +56,7 @@ import { TileDragService } from './tile-drag.service';
             [class.is-solved]="cell.solved"
             [style.grid-row]="cell.row + 1"
             [style.grid-column]="cell.col + 1"
+            [style.--enter-delay]="enterDelay(index)"
             [attr.aria-label]="cell.label"
             role="img"
           >
@@ -66,6 +68,7 @@ import { TileDragService } from './tile-drag.service';
             [class.is-solved]="cell.solved"
             [style.grid-row]="cell.row + 1"
             [style.grid-column]="cell.col + 1"
+            [style.--enter-delay]="enterDelay(index)"
             [attr.aria-label]="cell.label"
             role="img"
           >
@@ -90,6 +93,11 @@ export class Board {
 
   protected select(key: CellKey): void {
     this.store.select(key);
+  }
+
+  /** Cells are in reading order, so a small per-cell step deals them in. */
+  protected enterDelay(index: number): string {
+    return `${index * 14}ms`;
   }
 }
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, isDevMode } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { dailyPuzzle } from '@sumday/engine';
 import { Clock } from '../../core/time/clock';
@@ -21,7 +21,6 @@ export class HomePage {
   protected readonly progress = inject(ProgressStore);
   private readonly clock = inject(Clock);
 
-  protected readonly isDev = isDevMode();
   protected readonly today = this.clock.today;
   protected readonly dailyDifficulty = computed(() => dailyPuzzle(this.clock.today()).difficulty);
   protected readonly dailyStars = computed(

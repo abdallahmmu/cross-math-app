@@ -92,10 +92,6 @@ svg {
   outline-offset: 2px;
 }
 
-[data-theme='night'] :focus-visible {
-  outline-color: var(--sunflower);
-}
-
 /* Layout helpers ---------------------------------------------------------- */
 
 .page {

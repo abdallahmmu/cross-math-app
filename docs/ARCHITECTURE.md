@@ -170,8 +170,7 @@ the solver.
 Two stores, both `@ngrx/signals`.
 
 **`ProgressStore`** (root) is everything the player keeps: coins, hints, level results, the
-daily history and streak, owned themes, the active theme, the free-hint allowance, and
-settings. Its state is exactly the save file minus its version, which makes persistence a
+daily history and streak, the free-hint allowance, and settings. Its state is exactly the save file minus its version, which makes persistence a
 one-liner: a single `watchState` subscription writes through to the `SaveAdapter` on every
 change, so no method can forget to save.
 
@@ -219,15 +218,14 @@ mobile:
 ### Design system
 
 `tokens.css` holds every colour, border, radius, shadow, space, type, motion and layout
-value. A theme redefines nothing but those variables under a `data-theme` attribute;
-`ThemeService` swaps the attribute and the browser theme colour, and that is the entire
-theming mechanism.
+value. Nothing else in the app names a colour, so a second palette would be another block
+of these variables and no component changes.
 
 Two tokens carry the contrast rule. `--ink` is the border, shadow and body-text colour;
-`--on-accent` is the text colour on top of a filled accent. They are identical in the light
-themes and swap in Night Market, which is what lets every accent stay bright without any
-pair failing AA. `/styleguide` measures the ratios from the live tokens at runtime, so the
-table cannot drift from the CSS.
+`--on-accent` is the text colour on top of a filled accent. They are the same value today;
+keeping them apart is what would let a dark palette keep bright accents without any pair
+failing AA. `/styleguide` measures the ratios from the live tokens at runtime, so the table
+cannot drift from the CSS.
 
 Every accent pair clears AA. The one exception is by design: ink on the error red is
 4.45:1, which passes AA for large bold text - the only thing ever drawn on it - while
@@ -285,6 +283,23 @@ value has it as a prefix, otherwise it waits 900ms for a second digit. With tile
 matching tile is ignored with a toast - it is a typo, not a mistake, and never costs a
 life.
 
+### Motion
+
+Screens are not static on arrival. One global rule gives every page's blocks a staggered
+rise, the board deals its cells in one at a time in reading order, tray tiles and stars
+arrive in sequence, and the coin and hint counters bump when their number changes. Presses
+sink into their own shadow and, where there is a real pointer, buttons and tiles lift on
+hover.
+
+The counter bump is the one animation driven from script rather than CSS: two coin changes
+in quick succession have to restart it, and re-adding a class that is already there does
+not. That path checks `prefers-reduced-motion` itself, since it does not inherit the global
+rule.
+
+Everything else is disabled by one block in `animations.css` under
+`prefers-reduced-motion: reduce` - which also means that with "Reduce motion" enabled in
+the OS, the game is deliberately still.
+
 ### Accessibility
 
 Everything interactive is a real `<button>` or `<a>`; `nbButton` is an attribute selector
@@ -296,7 +311,7 @@ is disabled under `prefers-reduced-motion`.
 ### Tuning
 
 - Economy: `core/config/economy.ts` - every reward, price, cap and the star thresholds.
-- Themes: `core/config/themes.ts` plus one block in `tokens.css`.
+- Colour, spacing, type, motion: `styles/tokens.css`.
 - Difficulty: `DIFFICULTY_CONFIG` in the engine.
 
 ---

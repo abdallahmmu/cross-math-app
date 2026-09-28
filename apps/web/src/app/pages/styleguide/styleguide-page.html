@@ -6,18 +6,6 @@
   </p>
 
   <section class="stack">
-    <span class="section-title">Theme preview</span>
-    <div class="wrap">
-      @for (theme of themeOptions; track theme.id) {
-        <button nbButton variant="secondary" size="sm" (click)="previewTheme.set(theme.id)">
-          {{ theme.name }}
-        </button>
-      }
-    </div>
-    <p class="muted">Preview only - it does not buy or save the theme.</p>
-  </section>
-
-  <section class="stack">
     <span class="section-title">Contrast</span>
     <div class="scroll-x">
       <table>

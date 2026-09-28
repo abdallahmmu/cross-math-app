@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { SaveAdapter } from '../../core/save/save-adapter';
-import { findTheme } from '../../core/config/themes';
 import { ProgressStore } from '../../state/progress.store';
 import { NbBadge } from '../../ui/nb-badge';
 import { NbButton } from '../../ui/nb-button';
@@ -13,7 +11,7 @@ import { ToastService } from '../../ui/toast.service';
 @Component({
   selector: 'app-settings-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NbBadge, NbButton, NbCard, NbModal, NbTopBar, RouterLink],
+  imports: [NbBadge, NbButton, NbCard, NbModal, NbTopBar],
   templateUrl: './settings-page.html',
   styleUrl: './settings-page.css',
 })
@@ -24,7 +22,6 @@ export class SettingsPage {
 
   protected readonly confirmingReset = signal(false);
   protected readonly storageWritable = this.saves.writable;
-  protected readonly themeName = (): string => findTheme(this.progress.activeTheme()).name;
 
   protected toggleSound(): void {
     this.progress.setSound(!this.progress.sound());

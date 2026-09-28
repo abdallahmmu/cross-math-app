@@ -207,8 +207,6 @@ a whole:
 | `daily[date]` | Union by date; on collision, higher stars, then lower time |
 | `streak` | **Recomputed** from the merged `daily` history, never taken from either side |
 | `lastDailyDate` | `max(date)` present in the merged history |
-| `ownedThemes` | Union |
-| `activeTheme` | The client's - it is the most recent statement of intent |
 | `sound`, settings | The client's |
 | `coins`, `hints` | See below |
 
@@ -405,8 +403,6 @@ model Progress {
   hints         Int      @default(3)
   streak        Int      @default(0)
   lastDailyDate String?  @db.Char(10)
-  ownedThemes   String[] @default(["classic"])
-  activeTheme   String   @default("classic")
   settings      Json     @default("{}")
   /// Bumped on every accepted write; the client sends the revision it based its change on.
   revision      Int      @default(0)
@@ -629,8 +625,7 @@ whole point.
 GET /api/progress
 → 200 {
     "revision": 41,
-    "progress": { "coins": 260, "hints": 4, "streak": 5, "activeTheme": "night",
-                  "ownedThemes": ["classic","night"], "settings": { "sound": true } },
+    "progress": { "coins": 260, "hints": 4, "streak": 5, "settings": { "sound": true } },
     "levels": { "1": { "stars": 3, "bestTimeMs": 41200, "mistakes": 0, "hintsUsed": 0 } },
     "daily":  { "2026-09-28": { "stars": 2, "timeMs": 74210 } }
   }

@@ -76,6 +76,17 @@
   }
 }
 
+@keyframes nb-cell-in {
+  from {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 @keyframes nb-toast-in {
   from {
     opacity: 0;
@@ -85,6 +96,36 @@
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+}
+
+/*
+ * Page entrance. Every screen is built from `.page > *` blocks, so one rule
+ * gives all of them a staggered arrival instead of appearing all at once.
+ *
+ * The board opts out: it deals its own cells in, which reads better than the
+ * whole grid sliding in as a single block.
+ */
+.page > *:not(app-board) {
+  animation: nb-rise var(--dur-slow) var(--ease-out) backwards;
+}
+
+.page > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+.page > *:nth-child(2) {
+  animation-delay: 45ms;
+}
+.page > *:nth-child(3) {
+  animation-delay: 90ms;
+}
+.page > *:nth-child(4) {
+  animation-delay: 135ms;
+}
+.page > *:nth-child(5) {
+  animation-delay: 180ms;
+}
+.page > *:nth-child(n + 6) {
+  animation-delay: 225ms;
 }
 
 .anim-pop {

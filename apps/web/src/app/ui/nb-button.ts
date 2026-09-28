@@ -81,6 +81,23 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
       width: 100%;
     }
 
+    @media (hover: hover) {
+      :host(:hover:not(:disabled)) {
+        transform: translate(-2px, -2px);
+        box-shadow: 6px 6px 0 var(--ink);
+      }
+
+      :host(.is-sm:hover:not(:disabled)) {
+        box-shadow: 4px 4px 0 var(--ink);
+      }
+
+      :host(.is-ghost:hover:not(:disabled)) {
+        transform: none;
+        box-shadow: none;
+        background: color-mix(in srgb, var(--ink) 8%, transparent);
+      }
+    }
+
     /* Pressed: the button slides into its own shadow. */
     :host(:active:not(:disabled)) {
       transform: translate(var(--press-offset), var(--press-offset));

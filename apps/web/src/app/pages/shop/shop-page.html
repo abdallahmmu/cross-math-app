@@ -29,42 +29,7 @@
   </section>
 
   <section class="stack">
-    <span class="section-title">Themes</span>
-    @for (row of themeRows(); track row.theme.id) {
-      <nb-card class="offer">
-        <div class="offer-text">
-          <p class="offer-title">{{ row.theme.name }}</p>
-          <p class="muted">{{ row.theme.blurb }}</p>
-          <div class="swatches" aria-hidden="true">
-            @for (colour of row.theme.swatches; track colour) {
-              <span [style.background]="colour"></span>
-            }
-          </div>
-        </div>
-        <button
-          nbButton
-          [variant]="row.active ? 'ghost' : 'primary'"
-          [disabled]="row.active || (!row.owned && !row.affordable)"
-          (click)="chooseTheme(row)"
-          [attr.aria-label]="
-            row.active
-              ? row.theme.name + ' is active'
-              : row.owned
-                ? 'Use ' + row.theme.name
-                : 'Buy ' + row.theme.name + ' for ' + row.theme.coins + ' coins'
-          "
-        >
-          @if (!row.owned) {
-            <nb-icon name="coin" />
-          }
-          <span class="num">{{ themeButtonLabel(row) }}</span>
-        </button>
-      </nb-card>
-    }
-  </section>
-
-  <section class="stack">
-    <div class="row-between">
+    <div class="row-between money-header">
       <span class="section-title">Real money</span>
       <nb-badge tone="surface">{{ purchases.unavailableReason }}</nb-badge>
     </div>

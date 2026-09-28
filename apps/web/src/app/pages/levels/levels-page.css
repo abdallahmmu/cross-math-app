@@ -48,6 +48,13 @@
   --icon-size: 1.1rem;
 }
 
+@media (hover: hover) {
+  a.level:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+}
+
 a.level:active {
   transform: translate(2px, 2px);
   box-shadow: 0 0 0 var(--ink);

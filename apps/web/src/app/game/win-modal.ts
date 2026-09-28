@@ -79,7 +79,6 @@ import type { WinSummary } from './win-summary';
     }
     nb-stars.big {
       --icon-size: 2.5rem;
-      animation: nb-pop var(--dur-slow) var(--ease-spring);
     }
     .facts {
       display: flex;

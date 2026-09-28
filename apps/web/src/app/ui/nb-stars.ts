@@ -9,7 +9,11 @@ import { NbIcon } from './nb-icon';
   host: { role: 'img', '[attr.aria-label]': 'label()' },
   template: `
     @for (slot of slots(); track slot) {
-      <nb-icon name="star" [class.is-earned]="slot <= value()" />
+      <nb-icon
+        name="star"
+        [class.is-earned]="slot <= value()"
+        [style.--star-delay]="(slot - 1) * 90 + 'ms'"
+      />
     }
   `,
   styles: `
@@ -26,6 +30,8 @@ import { NbIcon } from './nb-icon';
       color: var(--sunflower);
       opacity: 1;
       stroke: var(--ink);
+      animation: nb-pop var(--dur-slow) var(--ease-spring) backwards;
+      animation-delay: var(--star-delay, 0ms);
     }
   `,
 })

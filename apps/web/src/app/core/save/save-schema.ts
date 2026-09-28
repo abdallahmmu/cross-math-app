@@ -1,9 +1,8 @@
-import { DEFAULT_THEME, isThemeId, type ThemeId } from '../config/themes';
 import { ECONOMY } from '../config/economy';
 import { todayISO } from '../time/local-date';
 
 /** Bump this whenever the shape changes, and add a step to `MIGRATIONS`. */
-export const SAVE_VERSION = 1;
+export const SAVE_VERSION = 2;
 
 export interface LevelResult {
   /** Best stars earned on this level, 1-3. */
@@ -29,8 +28,6 @@ export interface SaveData {
   readonly daily: Readonly<Record<string, DailyRecord>>;
   readonly streak: number;
   readonly lastDailyDate: string | null;
-  readonly ownedThemes: readonly ThemeId[];
-  readonly activeTheme: ThemeId;
   /** Free (ad-funded) hints are capped per calendar day. */
   readonly freeHintsDate: string;
   readonly freeHintsUsed: number;
@@ -46,8 +43,6 @@ export function createSave(): SaveData {
     daily: {},
     streak: 0,
     lastDailyDate: null,
-    ownedThemes: [DEFAULT_THEME],
-    activeTheme: DEFAULT_THEME,
     freeHintsDate: todayISO(),
     freeHintsUsed: 0,
     sound: true,
@@ -106,17 +101,16 @@ function readDaily(value: unknown): Record<string, DailyRecord> {
   return daily;
 }
 
-function readThemes(value: unknown): ThemeId[] {
-  const owned = Array.isArray(value) ? value.filter(isThemeId) : [];
-  return owned.includes(DEFAULT_THEME) ? owned : [DEFAULT_THEME, ...owned];
-}
-
 /**
  * One step per version bump: `MIGRATIONS[n]` upgrades a version-`n` save to
  * version `n + 1`. Adding a field usually means adding its default here.
  */
 const MIGRATIONS: Readonly<Record<number, (data: Unknowns) => Unknowns>> = {
-  // 1: (data) => ({ ...data, someNewField: false }),
+  /** 1 -> 2: themes were removed, so a v1 save drops what it owned. */
+  1: (data) => {
+    const { ownedThemes: _owned, activeTheme: _active, ...rest } = data;
+    return rest;
+  },
 };
 
 /** Turn whatever was in storage into a usable save. Never throws. */
@@ -132,8 +126,6 @@ export function migrate(raw: unknown): SaveData {
   }
 
   const defaults = createSave();
-  const activeTheme = data['activeTheme'];
-  const ownedThemes = readThemes(data['ownedThemes']);
   const lastDailyDate = data['lastDailyDate'];
 
   return {
@@ -144,9 +136,6 @@ export function migrate(raw: unknown): SaveData {
     daily: readDaily(data['daily']),
     streak: readInt(data['streak'], 0),
     lastDailyDate: typeof lastDailyDate === 'string' ? readDate(lastDailyDate, '') || null : null,
-    ownedThemes,
-    activeTheme:
-      isThemeId(activeTheme) && ownedThemes.includes(activeTheme) ? activeTheme : DEFAULT_THEME,
     freeHintsDate: readDate(data['freeHintsDate'], defaults.freeHintsDate),
     freeHintsUsed: readInt(data['freeHintsUsed'], 0),
     sound: readBool(data['sound'], true),

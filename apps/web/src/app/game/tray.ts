@@ -14,7 +14,7 @@ import { TileDrag } from './tile-drag.directive';
   imports: [Tile, TileDrag],
   template: `
     <div class="tray" role="group" aria-label="Number tiles">
-      @for (tile of store.tray(); track tile.id) {
+      @for (tile of store.tray(); track tile.id; let index = $index) {
         <button
           appTile
           appTileDrag
@@ -22,6 +22,7 @@ import { TileDrag } from './tile-drag.directive';
           [tileId]="tile.id"
           [tileValue]="tile.value"
           [wrong]="shakeValue() === tile.value"
+          [style.--enter-delay]="index * 40 + 'ms'"
           [attr.aria-label]="'Place ' + tile.value"
           (dropped)="dropOn($event, tile.id)"
           (tapped)="store.placeTile(tile.id)"
